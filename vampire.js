@@ -34,7 +34,7 @@ class Vampire {
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
-    return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal
+    return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal;
   }
 
   /** Stretch **/
@@ -46,6 +46,51 @@ class Vampire {
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
   closestCommonAncestor(vampire) {
 
+  }
+
+  // Returns the vampire object with that name, or null if no vampire exists with that name
+  vampireWithName(name) {
+
+    for (let offspring of this.offspring) {
+      // console.log(offspring)
+      let vampire = offspring.vampireWithName(name);
+      // console.log(vampire)
+      if (vampire) {
+        return vampire;
+      }
+    }
+
+    if (name === this.name) {
+      return this;
+    }
+    return null;
+  }
+
+  // Returns the total number of vampires that exist
+  get totalDescendents() {
+    let total = 0;
+
+    for (let offspring of this.offspring) {
+      total += offspring.totalDescendents + 1;
+    }
+    return total;
+  }
+
+  // Returns an array of all the vampires that were converted after 1980
+  get allMillennialVampires() {
+    let vampires = [];
+
+    // if vampire > 1980. push into array
+    if (this.yearConverted > 1980) {
+      vampires.push(this);
+    }
+
+    // call this method on all of the vampire's subordinates and combine their results with the current results.
+    for (const offspring of this.offspring) {
+      const vampireOlderThan = offspring.allMillennialVampires;
+      vampires = vampires.concat(vampireOlderThan);
+    }
+    return vampires;
   }
 }
 
